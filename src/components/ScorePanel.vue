@@ -1,6 +1,6 @@
 
 <template>
-    <div class="score"></div>
+    <span data-testid="score">{{ score }}</span>
 </template>
 
 <script setup lang="ts">

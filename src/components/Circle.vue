@@ -1,6 +1,7 @@
 
 <template>
-    <div class="circle"></div>
+    <div :data-testid="`circle-${color}`" class="circle" :style="{ backgroundColor: color }"></div>
+
 </template>
 
 <script setup lang="ts">
