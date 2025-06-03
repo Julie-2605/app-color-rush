@@ -1,9 +1,18 @@
 <script setup lang="ts">
 import TheWelcome from '../components/TheWelcome.vue'
+import Circle from '../components/Circle.vue'
+import GameOver from '../components/GameOver.vue'
+import ScorePanel from '../components/ScorePanel.vue'
+import StartMenu from '../components/StartMenu.vue'
+
+import { useGameStore } from '@/stores/gameStore'
+
+const gameStore = useGameStore()
+
 </script>
 
 <template>
   <main>
-    <TheWelcome />
+    <StartMenu v-if="!gameStore.gameStarted"/>
   </main>
 </template>
