@@ -14,5 +14,6 @@ const gameStore = useGameStore()
 <template>
   <main>
     <StartMenu v-if="!gameStore.gameStarted"/>
+    <Circle v-if="gameStore.gameStarted && !gameStore.gameOver"/>
   </main>
 </template>
