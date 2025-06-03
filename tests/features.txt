@@ -1,0 +1,29 @@
+Feature: Lancer une partie
+
+  Scenario: Démarrage du jeu en cliquant sur le bouton "Start"
+    Given je suis sur la page d'accueil
+    When je clique sur “Start”
+    Then la partie commence
+    And un cercle coloré s’affiche
+
+Feature: Interaction avec les cercles
+
+  Scenario: Cliquer sur le bon cercle
+    Given une consigne indique de cliquer sur une couleur spécifique
+    And un cercle avec la couleur indiquée est affiché
+    When je clique dessus
+    Then mon score augmente
+
+  Scenario: Cliquer sur une mauvaise couleur
+    Given une consigne indique de cliquer sur une couleur spécifique
+    And un cercle d'une autre couleur est affiché
+    When je clique dessus
+    Then je perds une vie / Le score baisse
+
+
+Feature: Fin de partie
+
+  Scenario: Le joueur n’a plus de vies / A cliqué sur une mauvaise couleur / Le temps s'est écoulé
+    Given Le joueur a 0 vie / La couleur cliquée était mauvaise / Le timer est à 0
+    When Un click effectué / Le timer à 0
+    Then Écran de Game over s'affiche
