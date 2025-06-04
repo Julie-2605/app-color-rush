@@ -1,4 +1,3 @@
-const { expect } = require("vitest");
 
 describe('Parcours utilisateur - Jeu de réflexes et de rapiditié', () => {
   beforeEach(() => {
@@ -14,7 +13,7 @@ describe('Parcours utilisateur - Jeu de réflexes et de rapiditié', () => {
 
   it("Affiche un cercle de couleur cliquable et augmente le score si la consigne est respectée", () => {
     cy.get('[data-testid="consigne-couleur"]').invoke('text').then((currentColor) => {
-        cy.get(`[data-color="${currentColor.trim()}"]`).click();
+        cy.get(`[data-testid="circle-${currentColor.trim()}"]`).click();
         cy.get('[data-testid="score"]').should('not.contain', '0'); //Score augmente de +10pts
       });
   });
