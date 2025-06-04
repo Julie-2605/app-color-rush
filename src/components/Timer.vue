@@ -10,7 +10,7 @@ import { useGameStore } from '@/stores/gameStore'
 
 const gameStore = useGameStore()
 
-const timer = ref(5)
+const timer = ref(60)
 let intervalId: number | undefined
 
 onMounted(() => {
