@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { onMounted, ref } from 'vue'
 import Circle from '../components/Circle.vue'
 import GameOver from '../components/GameOver.vue'
 import ScorePanel from '../components/ScorePanel.vue'
@@ -9,6 +10,20 @@ import { useGameStore } from '@/stores/gameStore'
 
 const gameStore = useGameStore()
 
+const targetColor = ref('')
+const circleKey = ref(0) // 🔑 
+
+function nextRound() {
+  targetColor.value = gameStore.getRandomColor()
+  circleKey.value++ 
+}
+
+onMounted(() => {
+  if (gameStore.gameStarted) {
+    nextRound()
+  }
+})
+
 </script>
 
 <template>
@@ -17,7 +32,7 @@ const gameStore = useGameStore()
     <div v-if="gameStore.gameStarted" class="game-container">
       <Timer v-if=" gameStore.gameStarted && !gameStore.gameOver"/>
       <ScorePanel v-if="gameStore.gameStarted && !gameStore.gameOver"/>
-      <Circle v-if="gameStore.gameStarted && !gameStore.gameOver"/>
+      <Circle :key="circleKey" :target-color="targetColor" @next-round="nextRound"/>
     </div>
     <div v-if="gameStore.gameOver && !gameStore.gameStarted" class="gameOver-container">
       <GameOver v-if="gameStore.gameOver"/>
