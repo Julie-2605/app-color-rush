@@ -11,7 +11,7 @@ import { useGameStore } from '@/stores/gameStore'
 const gameStore = useGameStore()
 
 const targetColor = ref('')
-const circleKey = ref(0) // 🔑 
+const circleKey = ref(0) 
 
 function nextRound() {
   targetColor.value = gameStore.getRandomColor()
@@ -32,6 +32,9 @@ onMounted(() => {
     <div v-if="gameStore.gameStarted" class="game-container">
       <Timer v-if=" gameStore.gameStarted && !gameStore.gameOver"/>
       <ScorePanel v-if="gameStore.gameStarted && !gameStore.gameOver"/>
+      <p v-if="gameStore.gameStarted && !gameStore.gameOver" class="instruction" data-testid="instruction">
+        Clique sur le cercle {{ targetColor.value }}
+      </p>
       <Circle :key="circleKey" :target-color="targetColor" @next-round="nextRound"/>
     </div>
     <div v-if="gameStore.gameOver && !gameStore.gameStarted" class="gameOver-container">

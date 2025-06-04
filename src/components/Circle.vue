@@ -9,8 +9,7 @@ const props = defineProps<{
 const gameStore = useGameStore()
 const emit = defineEmits(['next-round'])
 
-// Couleur réelle du cercle
-const color = ref(gameStore.getRandomColor())
+const color = ref<string>(gameStore.getRandomColor())
 
 function handleClick() {
   if (color.value === props.targetColor) {
@@ -24,20 +23,11 @@ function handleClick() {
 </script>
 
 <template>
-
-  <p
-  v-if="gameStore.gameStarted && !gameStore.gameOver"
-  class="instruction"
-  data-testid="instruction"
->
-  Clique sur le cercle {{ targetColor }}
-</p>
-
-<div
+  <div
     class="circle"
-    :style="{ backgroundColor: color }"
+    :style="{ backgroundColor: color.value }"
     @click="handleClick"
-    :data-testid="`circle-${color}`"
+    :data-testid="`circle-${color.value}`"
   />
 </template>
 

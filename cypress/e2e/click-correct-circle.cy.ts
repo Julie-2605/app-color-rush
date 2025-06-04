@@ -1,27 +1,23 @@
 describe('Interaction avec les cercles', () => {
   it('Cliquer sur le bon cercle fait augmenter le score', () => {
-    // Given : je suis sur la page d'accueil
     cy.visit('/')
 
-    // Given : une consigne de couleur est affichée
-    cy.get('[data-testid="instruction"]').should('contain.text', 'Clique sur')
+    cy.contains('Start').click()
 
-    // Récupérer la couleur attendue dans la consigne
     cy.get('[data-testid="instruction"]')
       .invoke('text')
       .then((text) => {
-        const match = text.match(/Clique sur le cercle (\w+)/)
-        const targetColor = match ? match[1] : null
+        console.log('Instruction affichée :', text)
 
-        expect(targetColor).to.not.be.null
+        // Regex plus souple : capture le code couleur #xxxxxx
+        const match = text.match(/#([A-Fa-f0-9]{6})/)
+        const targetColor = match ? `#${match[1]}` : null
 
-        // And : un cercle de cette couleur est affiché
-        cy.get(`[data-testid="circle-${targetColor}"]`).should('exist')
+        expect(targetColor, 'Couleur cible détectée').to.not.be.null
 
-        // When : je clique dessus
+        // Vérifie qu'un cercle avec cette couleur existe
         cy.get(`[data-testid="circle-${targetColor}"]`).click()
 
-        // Then : le score augmente (score >= 1)
         cy.get('[data-testid="score"]')
           .invoke('text')
           .then((scoreText) => {
