@@ -9,6 +9,13 @@ import { useGameStore } from '@/stores/gameStore'
 
 const gameStore = useGameStore()
 
+function displayRandomCircle(color: string) {
+  let windowWidth = window.innerWidth;
+  let windowHeight = window.innerHeight;
+
+  let x = Math.floor((Math.random()) * windowWidth);
+  let y = Math.floor((Math.random()) * windowHeight);
+}
 </script>
 
 <template>

@@ -6,6 +6,8 @@ export const useGameStore = defineStore('game', {
     gameStarted: false,
     gameOver: false,
     score: 0,
+    colors: ["#5DE3F5", "#406DF5", "#3FA7F4", "#9DF5E2", "#A39DF5", "#BCDCF5"],
+    currentColor: '',
   }),
 
   actions: {
@@ -28,6 +30,12 @@ export const useGameStore = defineStore('game', {
     },
     resetScore() {
       this.score = 0
+    },
+    defineCurrentColor() {
+        this.currentColor = this.getRandomColor();
+    },
+    getRandomColor() {
+     return this.colors[Math.floor(Math.random() * this.colors.length)];
     }
   }
 })
