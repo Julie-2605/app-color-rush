@@ -1,33 +1,34 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watchEffect } from 'vue'
 import { useGameStore } from '@/stores/gameStore'
 
-const props = defineProps<{
-  targetColor: string
-}>()
-
 const gameStore = useGameStore()
-const emit = defineEmits(['next-round'])
 
-const color = ref<string>(gameStore.getRandomColor())
+const color = ref<string>('')
+
+watchEffect(() => {
+  if (gameStore.targetColor) {
+    color.value = gameStore.getRandomColor()
+  }
+})
 
 function handleClick() {
-  if (color.value === props.targetColor) {
+  if (color.value === gameStore.targetColor) {
     gameStore.incrementScore()
   } else {
     gameStore.decrementScore()
   }
 
-  emit('next-round')
+  gameStore.setNewTargetColor()
 }
 </script>
 
 <template>
   <div
     class="circle"
-    :style="{ backgroundColor: color.value }"
+    :style="{ backgroundColor: color }"
     @click="handleClick"
-    :data-testid="`circle-${color.value}`"
+    :data-testid="`circle-${color}`"
   />
 </template>
 
