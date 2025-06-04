@@ -1,4 +1,3 @@
-
 <template>
     <div :data-testid="`circle-${color}`" class="circle" :style="{ backgroundColor: color }"></div>
 
@@ -9,5 +8,10 @@
 </script>
 
 <style scoped>
-
+.circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: blue;
+}
 </style>

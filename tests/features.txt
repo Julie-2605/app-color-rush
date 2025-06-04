@@ -18,7 +18,7 @@ Feature: Interaction avec les cercles
     Given une consigne indique de cliquer sur une couleur spécifique
     And un cercle d'une autre couleur est affiché
     When je clique dessus
-    Then je perds une vie / Le score baisse
+    Then Le score baisse
 
 
 Feature: Fin de partie
