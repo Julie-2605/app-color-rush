@@ -11,7 +11,8 @@ import { useGameStore } from '@/stores/gameStore'
 const gameStore = useGameStore()
 
 function startGame() {
-    gameStore.toggleStartGame()
+    gameStore.startGame()
+    gameStore.resetScore()
 }
 </script>
 

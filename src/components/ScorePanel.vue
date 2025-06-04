@@ -1,9 +1,14 @@
 
 <template>
-    <div class="score"></div>
+    <div class="score">Votre score : {{ score }}</div>
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from 'pinia';
+import { useGameStore } from '@/stores/gameStore';
+
+const gameStore = useGameStore();
+const { score } = storeToRefs(gameStore);
 
 </script>
 

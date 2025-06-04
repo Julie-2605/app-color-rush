@@ -1,6 +1,6 @@
 
 <template>
-    <div class="game-over"></div>
+    <div class="gameOver">Partie terminée !</div>
 </template>
 
 <script setup lang="ts">

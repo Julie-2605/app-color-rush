@@ -25,5 +25,5 @@ Feature: Fin de partie
 
   Scenario: Le temps s'est écoulé
     Given Le timer est à 0
-    When Un click effectué / Le timer à 0
+    When Le timer à 0
     Then Écran de Game over s'affiche
