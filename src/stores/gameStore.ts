@@ -27,6 +27,11 @@ export const useGameStore = defineStore('game', {
     },
     resetScore() {
       this.score = 0
-    }
+    },
+    getRandomColor() {
+        const colors = ["#5DE3F5", "#406DF5", "#3FA7F4", "#9DF5E2", "#A39DF5", "#BCDCF5"];
+        
+        return colors[Math.floor(Math.random() * colors.length)];
+    },
   }
 })
