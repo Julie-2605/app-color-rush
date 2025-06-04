@@ -18,12 +18,12 @@ Feature: Interaction avec les cercles
     Given une consigne indique de cliquer sur une couleur spécifique
     And un cercle d'une autre couleur est affiché
     When je clique dessus
-    Then je perds une vie / Le score baisse
+    Then Le score baisse
 
 
 Feature: Fin de partie
 
-  Scenario: Le joueur n’a plus de vies / A cliqué sur une mauvaise couleur / Le temps s'est écoulé
-    Given Le joueur a 0 vie / La couleur cliquée était mauvaise / Le timer est à 0
+  Scenario: Le temps s'est écoulé
+    Given Le timer est à 0
     When Un click effectué / Le timer à 0
     Then Écran de Game over s'affiche

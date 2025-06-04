@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button class="start" @click="startGame">Start</button>
+    <button class="startBtn" @click="startGame">Start</button>
   </div>
 </template>
 
@@ -16,7 +16,7 @@ function startGame() {
 </script>
 
 <style scoped>
-.start {
+.startBtn {
   padding: 10px;
   background-color: #4CAF50;
   color: white;

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import TheWelcome from '../components/TheWelcome.vue'
 import Circle from '../components/Circle.vue'
 import GameOver from '../components/GameOver.vue'
 import ScorePanel from '../components/ScorePanel.vue'
@@ -14,6 +13,8 @@ const gameStore = useGameStore()
 <template>
   <main>
     <StartMenu v-if="!gameStore.gameStarted"/>
-    <Circle v-if="gameStore.gameStarted && !gameStore.gameOver"/>
+    <div v-if="gameStore.gameStarted" class="game-container">
+          <Circle v-if="gameStore.gameStarted && !gameStore.gameOver"/>
+    </div>
   </main>
 </template>
