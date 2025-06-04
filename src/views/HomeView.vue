@@ -10,20 +10,13 @@ import { useGameStore } from '@/stores/gameStore'
 
 const gameStore = useGameStore()
 
-const targetColor = ref('')
-const circleKey = ref(0) // 🔑 
+function displayRandomCircle(color: string) {
+  let windowWidth = window.innerWidth;
+  let windowHeight = window.innerHeight;
 
-function nextRound() {
-  targetColor.value = gameStore.getRandomColor()
-  circleKey.value++ 
+  let x = Math.floor((Math.random()) * windowWidth);
+  let y = Math.floor((Math.random()) * windowHeight);
 }
-
-onMounted(() => {
-  if (gameStore.gameStarted) {
-    nextRound()
-  }
-})
-
 </script>
 
 <template>
@@ -32,7 +25,7 @@ onMounted(() => {
     <div v-if="gameStore.gameStarted" class="game-container">
       <Timer v-if=" gameStore.gameStarted && !gameStore.gameOver"/>
       <ScorePanel v-if="gameStore.gameStarted && !gameStore.gameOver"/>
-      <Circle :key="circleKey" :target-color="targetColor" @next-round="nextRound"/>
+      <Circle v-if="gameStore.gameStarted && !gameStore.gameOver"/>
     </div>
     <div v-if="gameStore.gameOver && !gameStore.gameStarted" class="gameOver-container">
       <GameOver v-if="gameStore.gameOver"/>
