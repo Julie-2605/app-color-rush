@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref, watch, nextTick } from 'vue'
 import Circle from '../components/Circle.vue'
 import GameOver from '../components/GameOver.vue'
 import ScorePanel from '../components/ScorePanel.vue'
@@ -11,33 +11,22 @@ import { useGameStore } from '@/stores/gameStore'
 
 const gameStore = useGameStore();
 const circles = ref<{id: number, color: string; x: number; y: number}[]>([]);
-
 const gameBoardRef = ref<HTMLElement | null>(null);
 
-// function getRandomCoordonnees() {
-//   if (!gameBoardRef.value) return { x: 0, y: 0 };
-
-//   const rect = gameBoardRef.value.getBoundingClientRect();
-//   const width  = rect.width  - 100;
-//   const height = rect.height - 100;
-
-//   const x = Math.floor(Math.random() * width);
-//   const y = Math.floor(Math.random() * height);
-
-//   return { x, y };
-// }
-
 function getRandomCoordonnees() {
-  let windowWidth = window.innerWidth;
-  let windowHeight = window.innerHeight;
+  if (!gameBoardRef.value) return { x: 0, y: 0 };
 
-  let x = Math.floor((Math.random()) * windowWidth);
-  let y = Math.floor((Math.random()) * windowHeight);
+  const rect = gameBoardRef.value.getBoundingClientRect();
+  const circleSize = 100;
 
-  return { x: x, y: y };
+  const width = rect.width - circleSize;
+  const height = rect.height - circleSize;
+
+  const x = Math.floor(Math.random() * width);
+  const y = Math.floor(Math.random() * height);
+
+  return { x, y };
 }
-
-
 
 function displayRandomCircle() {
   const color = gameStore.getRandomColor();
@@ -50,15 +39,18 @@ function removeCircle(id: number) {
   circles.value = circles.value.filter(circle => circle.id !== id);
 }
 
-let interval: number | null = null
+let interval: number | null = null;
 
 watch(
   () => gameStore.gameStarted,
-  (started) => {
+  async (started) => {
     if (started) {
       gameStore.defineCurrentColor();
+
+      await nextTick();
+
       displayRandomCircle();
-      interval = setInterval(displayRandomCircle, 1000);
+      interval = setInterval(displayRandomCircle, 500);
     } else {
       if (interval) clearInterval(interval);
       circles.value = [];
@@ -69,40 +61,40 @@ watch(
 onMounted(() => {
   if (interval) clearInterval(interval);
 });
-
 </script>
 
 <template>
   <main>
-    <StartMenu v-if="!gameStore.gameStarted"/>
+    <StartMenu v-if="!gameStore.gameStarted" />
 
     <div v-if="gameStore.gameStarted" class="game-container">
-      <Timer v-if=" gameStore.gameStarted && !gameStore.gameOver"/>
-      <ScorePanel v-if="gameStore.gameStarted && !gameStore.gameOver"/>
+      <Timer v-if="gameStore.gameStarted && !gameStore.gameOver" />
+      <ScorePanel v-if="gameStore.gameStarted && !gameStore.gameOver" />
       <ConsigneColor />
-      <div class="gameboard" ref="gameboardRef">
+      <div class="gameboard" ref="gameBoardRef">
         <Circle
-            v-for="(circle, index) in circles"
-            :key="circle.id"
-            :id="circle.id"
-            :color="circle.color"
-            :x="circle.x"
-            :y="circle.y"
-            @remove-circle="removeCircle"
-          />
+          v-for="(circle, index) in circles"
+          :key="circle.id"
+          :id="circle.id"
+          :color="circle.color"
+          :x="circle.x"
+          :y="circle.y"
+          @remove-circle="removeCircle"
+        />
       </div>
     </div>
 
     <div v-if="gameStore.gameOver && !gameStore.gameStarted" class="gameOver-container">
-      <GameOver v-if="gameStore.gameOver"/>
+      <GameOver v-if="gameStore.gameOver" />
+      <ScorePanel v-if="gameStore.gameOver" />
     </div>
   </main>
 </template>
 
 <style scoped>
 main {
-  width: 100vw;
   height: 100vh;
+  width: 1000px;
   display: flex;
   flex-direction: column;
 }
@@ -111,11 +103,13 @@ main {
   flex: 1;
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
 .gameboard {
   flex: 1;
   position: relative;
-  overflow: hidden;
+  width: 100%;
+  box-sizing: border-box;
 }
 </style>
