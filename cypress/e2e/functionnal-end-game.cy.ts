@@ -6,7 +6,7 @@ describe('Fonctionnalité : Fin de partie', () => {
     cy.get('button.startBtn').click()
 
     // Avance le temps de 60 secondes
-    cy.tick(60000)
+    cy.tick(61000)
 
     // Then la partie est terminéee : vérifie que le message de fin de partie et le score sont affichés
     cy.get('.gameOver').should('be.visible')

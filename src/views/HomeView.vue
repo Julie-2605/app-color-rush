@@ -95,7 +95,6 @@ onMounted(() => {
 
     <div v-if="gameStore.gameOver && !gameStore.gameStarted" class="gameOver-container">
       <GameOver v-if="gameStore.gameOver"/>
-      <ScorePanel v-if="gameStore.gameOver"/>
     </div>
   </main>
 </template>
