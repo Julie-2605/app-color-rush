@@ -9,14 +9,14 @@ describe('Parcours utilisateur - Jeu de réflexes et de rapiditié', () => {
     cy.get('.timer').should('contain', '60');
     cy.get('.score').should('contain', '0');
     cy.get('.consigne').should('exist');
-    cy.get('[data-testid="consigne"]').then(($consigne) => {
+    cy.get('[data-testid="instruction"]').then(($consigne) => {
       const text = $consigne.text();
       cy.log('Consigne affichée:', text);
     });
   });
 
 it("Augmente le score si on clique sur le bon cercle (couleur correcte)", () => {
-  cy.get('[data-testid="consigne"] strong')
+  cy.get('[data-testid="instruction"] strong')
     .invoke('attr', 'data-testid')
     .then((color) => {
       if (!color) throw new Error('La couleur de la consigne est introuvable');
@@ -31,7 +31,7 @@ it("Augmente le score si on clique sur le bon cercle (couleur correcte)", () => 
 });
 
 it("Réduit le score si on clique sur un cercle de mauvaise couleur", () => {
-  cy.get('[data-testid="consigne"] strong')
+  cy.get('[data-testid="instruction"] strong')
     .invoke('attr', 'data-testid')
     .then((correctColor) => {
       const allColors = ["#5DE3F5", "#406DF5", "#3FA7F4", "#9DF5E2", "#A39DF5", "#BCDCF5"];
