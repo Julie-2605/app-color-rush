@@ -1,6 +1,6 @@
 
 <template>
-    <div class="gameOver">Partie terminée !</div>
+    <div data-testid="gameOver" class="gameOver">Partie terminée !</div>
     <ScorePanel />
 </template>
 
