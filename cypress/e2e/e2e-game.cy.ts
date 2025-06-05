@@ -2,35 +2,56 @@
 describe('Parcours utilisateur - Jeu de réflexes et de rapiditié', () => {
   beforeEach(() => {
     cy.visit('/');
-    cy.get('[data-testid="start-button"]').click();
+    cy.get('.startBtn').click();
   });
 
   it('Démarre le jeu après avoir cliqué sur "Start"', () => {
-    cy.get('[data-testid="timer"]').should('contain', '60');
-    cy.get('[data-testid="score"]').should('contain', '0');
-    cy.get('[data-testid="consigne-couleur"]').should('exist');
-  });
-
-  it("Affiche un cercle de couleur cliquable et augmente le score si la consigne est respectée", () => {
-    cy.get('[data-testid="consigne-couleur"]').invoke('text').then((currentColor) => {
-        cy.get(`[data-testid="circle-${currentColor.trim()}"]`).click();
-        cy.get('[data-testid="score"]').should('not.contain', '0'); //Score augmente de +10pts
-      });
-  });
-
-  it("Réduit le score si mauvaise couleur cliquée", () => {
-    cy.get('[data-testid="consigne-couleur"]').invoke('text').then((currentColor) => {
-      const colors = ['rouge', 'bleu', 'vert', 'jaune'].filter(c => c !== currentColor.trim());
-      const wrongColor = colors[0];
-      
-      cy.get('[data-testid="score"').invoke('text').then((scoreBefore) => {
-        cy.get(`[data-color="${wrongColor}"]`).click();
-        cy.get('[data-testid="score"]').invoke('text').then((scoreAfter) => {
-          expect(parseInt(scoreAfter)).to.be.lessThan(parseInt(scoreBefore)); //Score a été réduit
-        });  
-      });
+    cy.get('.timer').should('contain', '60');
+    cy.get('.score').should('contain', '0');
+    cy.get('.consigne').should('exist');
+    cy.get('[data-testid="instruction"]').then(($consigne) => {
+      const text = $consigne.text();
+      cy.log('Consigne affichée:', text);
     });
   });
+
+it("Augmente le score si on clique sur le bon cercle (couleur correcte)", () => {
+  cy.get('[data-testid="instruction"] strong')
+    .invoke('attr', 'data-testid')
+    .then((color) => {
+      if (!color) throw new Error('La couleur de la consigne est introuvable');
+      const escapedColor = color.replace('#', '\\#');
+      // On attend qu'un cercle soit de la bonne couleur apparaisse
+      cy.get(`[data-testid="circle-${color}"]`, { timeout: 5000 }).should('exist').first().click();
+      cy.get('[data-testid="score"]').invoke('text').then((text) => {
+        const score = parseInt(text.replace(/\D/g, ''));
+        expect(score).to.be.greaterThan(0);
+      });
+    });
+});
+
+it("Réduit le score si on clique sur un cercle de mauvaise couleur", () => {
+  cy.get('[data-testid="instruction"] strong')
+    .invoke('attr', 'data-testid')
+    .then((correctColor) => {
+      const allColors = ["#5DE3F5", "#406DF5", "#3FA7F4", "#9DF5E2", "#A39DF5", "#BCDCF5"];
+      const wrongColor = allColors.find(c => c !== correctColor)!;
+
+      // Clique d'abord sur un bon cercle pour augmenter le score
+      cy.get(`[data-testid="circle-${correctColor}"]`, { timeout: 10000 }).should('exist').first().click();
+
+      // Puis clique sur un mauvais cercle pour le réduire
+      cy.get('[data-testid="score"]').invoke('text').then((beforeText) => {
+        const before = parseInt(beforeText.replace(/\D/g, ''));
+        cy.get(`[data-testid="circle-${wrongColor}"]`, { timeout: 10000 }).should('exist').first().click();
+        cy.get('[data-testid="score"]').invoke('text').then((afterText) => {
+          const after = parseInt(afterText.replace(/\D/g, ''));
+          expect(after).to.be.lessThan(before);
+        });
+      });
+    });
+});
+
 
   // it("L'apparition des cercles s'accélère au bout de quelques temps", () => {
   //   cy.get('[data-testid="start-button"]').click();
@@ -46,10 +67,12 @@ describe('Parcours utilisateur - Jeu de réflexes et de rapiditié', () => {
   // });
 
   it('Termine le jeu après 60 secondes', () => {
-    cy.clock(); //Simulation du passage du temps
-    cy.tick(60000); //60s
+    cy.clock(); // 1. Prendre le contrôle du temps AVANT tout
+    cy.visit('/');
+    cy.get('.startBtn').click(); // 2. Démarrer le jeu APRÈS cy.clock()
+    cy.tick(61000); // 3. Simuler 61 secondes
 
-    cy.get('[data-testid="end-game"]').should('be.visible');
-    cy.get('[data-testid="final-score"]').should('exist');
+    cy.get('[data-testid="gameOver"]').should('be.visible');
+    cy.get('[data-testid="score"]').should('exist');
   });
 });

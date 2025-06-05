@@ -1,3 +1,43 @@
+<script setup lang="ts">
+import { defineProps, type DefineProps } from 'vue';
+import { ref, watchEffect, onMounted } from 'vue'
+import { useGameStore } from '@/stores/gameStore'
+
+const gameStore = useGameStore()
+
+const color = ref<string>('')
+
+const props = defineProps<{
+  id: number
+  color: string
+  x: number
+  y: number
+}>()
+
+const emit = defineEmits<{
+  (e: 'remove-circle', id: number): void
+}>()
+
+watchEffect(() => {
+  if (gameStore.currentColor) {
+    color.value = gameStore.getRandomColor()
+  }
+})
+
+function handleClick() {
+  if (color.value === gameStore.currentColor) {
+    gameStore.incrementScore()
+  } else {
+    gameStore.decrementScore()
+  }
+
+setTimeout(() => emit('remove-circle', props.id), 110)
+
+onMounted(() => {
+  setTimeout(() => emit('remove-circle', props.id), gameStore.circleDisappear)
+})
+</script>
+
 <template>
   <motion
     :data-testid="`circle-${color}`"
@@ -15,37 +55,6 @@
   />
 </template>
 
-<script setup lang="ts">
-import { onMounted } from 'vue'
-import { useGameStore } from '@/stores/gameStore'
-
-const props = defineProps<{
-  id: number
-  color: string
-  x: number
-  y: number
-}>()
-
-const emit = defineEmits<{
-  (e: 'remove-circle', id: number): void
-}>()
-
-const gameStore = useGameStore()
-
-function handleClick() {
-  if (props.color === gameStore.currentColor) {
-    gameStore.incrementScore()
-  } else {
-    gameStore.decrementScore()
-  }
-
-  setTimeout(() => emit('remove-circle', props.id), 110)
-}
-
-onMounted(() => {
-  setTimeout(() => emit('remove-circle', props.id), gameStore.circleDisappear)
-})
-</script>
 
 <style scoped>
 .circle {

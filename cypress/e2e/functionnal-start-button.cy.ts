@@ -10,7 +10,7 @@ describe('Fonctionnalité : lancer une partie', () => {
     cy.get('.game-container').should('be.visible')
 
     // Then le timer est affiché
-    cy.get('.Timer').should('be.visible')
+    cy.get('.timer').should('be.visible')
 
     // And un cercle coloré est affiché
     cy.get('.circle').should('exist')

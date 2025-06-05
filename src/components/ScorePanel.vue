@@ -1,6 +1,5 @@
-
 <template>
-    <div class="score">Votre score : {{ score }}</div>
+    <div data-testid="score" class="score">Votre score : {{ score }}</div>
 </template>
 
 <script setup lang="ts">

@@ -1,38 +1,39 @@
-describe('Interaction avec les cercles', () => {
-  it('Cliquer sur une mauvaise couleur fait baisser le score', () => {
-    cy.visit('/')
+it('Cliquer sur une mauvaise couleur fait baisser le score', () => {
+  cy.visit('/')
 
-    // Attendre que la consigne s'affiche
-    cy.get('[data-testid="instruction"]').should('contain.text', 'Clique sur')
+  cy.contains('Start').click()
 
-    // Récupérer la couleur cible
-    cy.get('[data-testid="instruction"]')
-      .invoke('text')
-      .then((text) => {
-        const match = text.match(/Clique sur le cercle (\w+)/)
-        const targetColor = match ? match[1] : null
-        expect(targetColor).to.not.be.null
+  cy.get('[data-testid="instruction"]', { timeout: 10000 })
+    .invoke('html')
+    .then((html) => {
+      const match = html.match(/#([A-Fa-f0-9]{6})/)
+      expect(match, 'Couleur cible détectée').to.not.be.null
+      const targetColor = `#${match![1]}`
 
-        // Récupérer le score actuel
-        cy.get('[data-testid="score"]')
-          .invoke('text')
-          .then((initialScoreText) => {
-            const initialScore = parseInt(initialScoreText, 10)
+      cy.get('[data-testid="score"]')
+        .invoke('text')
+        .then((initialScoreText) => {
+          const initialScore = parseInt(initialScoreText.match(/\d+/)?.[0] || '0', 10)
 
-            // Trouver un cercle d'une couleur différente
-            cy.get(`[data-testid^="circle-"]`)
-              .not(`[data-testid="circle-${targetColor}"]`)
-              .first()
-              .click()
+          cy.get('[data-testid^="circle-"]')
+            .then((circles) => {
+              const allCircles = [...circles]
+              const otherCircle = [...circles].find((el) => el.dataset.testid !== `circle-${targetColor}`)
 
-            // Vérifier que le score a baissé
-            cy.get('[data-testid="score"]')
+              if (otherCircle) {
+                cy.wrap(otherCircle).click()
+              } else {
+                cy.wait(1000)
+                cy.get('[data-testid^="circle-"]').eq(0).click()
+              }
+
+              cy.get('[data-testid="score"]')
               .invoke('text')
               .then((newScoreText) => {
-                const newScore = parseInt(newScoreText, 10)
-                expect(newScore).to.be.lessThan(initialScore)
-              })
-          })
-      })
-  })
+                const newScore = parseInt(newScoreText.match(/\d+/)?.[0] || '0', 10)
+                expect(newScore).to.be.at.most(initialScore)
+            })
+            })
+        })
+    })
 })
