@@ -6,8 +6,10 @@ export const useGameStore = defineStore('game', {
     gameStarted: false,
     gameOver: false,
     score: 0,
-    colors: ["#5DE3F5", "#406DF5", "#3FA7F4", "#9DF5E2", "#A39DF5", "#BCDCF5"],
+    colors: ["#5DE3F5", "#406DF5", "#3FA7F4", "#9DF5E2", "#A39DF5"],
     currentColor: '',
+    speed: 500,
+    circleDisappear: 1500,
   }),
 
   actions: {
@@ -15,6 +17,8 @@ export const useGameStore = defineStore('game', {
       this.gameStarted = true
       this.gameOver = false
       this.score = 0
+      this.speed = 500
+      this.circleDisappear = 1500
     },
     endGame() {
       this.gameStarted = false

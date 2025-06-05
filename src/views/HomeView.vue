@@ -39,28 +39,28 @@ function removeCircle(id: number) {
   circles.value = circles.value.filter(circle => circle.id !== id);
 }
 
-let interval: number | null = null;
+let interval: ReturnType<typeof setInterval> | null = null;
+
+function stopLoop () {
+  if (interval !== null) clearInterval(interval);
+  interval = null;
+}
 
 watch(
-  () => gameStore.gameStarted,
-  async (started) => {
+  () => [gameStore.gameStarted, gameStore.speed] as const,
+  ([started, currentSpeed]) => {
+    stopLoop();
+
     if (started) {
-      gameStore.defineCurrentColor();
-
-      await nextTick();
-
-      displayRandomCircle();
-      interval = setInterval(displayRandomCircle, 500);
-    } else {
-      if (interval) clearInterval(interval);
       circles.value = [];
+      gameStore.defineCurrentColor();
+      displayRandomCircle();
+      interval = setInterval(displayRandomCircle, currentSpeed);
     }
   }
 );
 
-onMounted(() => {
-  if (interval) clearInterval(interval);
-});
+onMounted(stopLoop);
 </script>
 
 <template>
@@ -86,7 +86,6 @@ onMounted(() => {
 
     <div v-if="gameStore.gameOver && !gameStore.gameStarted" class="gameOver-container">
       <GameOver v-if="gameStore.gameOver" />
-      <ScorePanel v-if="gameStore.gameOver" />
     </div>
   </main>
 </template>
