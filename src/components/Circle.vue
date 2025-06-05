@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { defineProps, type DefineProps } from 'vue';
 import { ref, watchEffect, onMounted } from 'vue'
 import { useGameStore } from '@/stores/gameStore'
 
@@ -31,7 +30,8 @@ function handleClick() {
     gameStore.decrementScore()
   }
 
-setTimeout(() => emit('remove-circle', props.id), 110)
+  setTimeout(() => emit('remove-circle', props.id), 110)
+}
 
 onMounted(() => {
   setTimeout(() => emit('remove-circle', props.id), gameStore.circleDisappear)
@@ -42,7 +42,7 @@ onMounted(() => {
   <motion
     :data-testid="`circle-${color}`"
     class="circle"
-    :style="{ backgroundColor: color, left: `${x}px`, top: `${y}px` }"
+    :style="{ backgroundColor: color, left: `${props.x}px`, top: `${props.y}px` }"
     :initial="{ scale: 0, opacity: 0 }"
     :enter="{ scale: 1, opacity: 1, transition: { type: 'spring', stiffness: 300, damping: 20 } }"
     :hovered="{ scale: 1.1 }"
@@ -54,6 +54,7 @@ onMounted(() => {
     @click="handleClick"
   />
 </template>
+
 
 
 <style scoped>
