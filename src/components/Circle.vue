@@ -31,7 +31,6 @@ function handleClick() {
     gameStore.decrementScore()
   }
 
-  // gameStore.defineCurrentColor()
   emit('remove-circle', props.id);
 }
 
