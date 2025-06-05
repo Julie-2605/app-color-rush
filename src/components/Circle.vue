@@ -1,5 +1,10 @@
 <template>
-    <div :data-testid="`circle-${color}`" class="circle" :style="{ backgroundColor: color, left: `${x}px`, top: `${y}px` }"" @click="clickCircle"></div>
+    <div
+    :data-testid="`circle-${color}`"
+    class="circle"
+    :style="{ backgroundColor: color, left: `${x}px`, top: `${y}px` }"
+    @click="clickCircle"
+    ></div>
 </template>
 
 <script setup lang="ts">
