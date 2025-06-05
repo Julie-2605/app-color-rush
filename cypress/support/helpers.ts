@@ -1,8 +1,10 @@
+// Simule le début d'une partie
 export function startGame() {
   cy.visit('/');
   cy.get('.startBtn').click();
 }
 
+// Récupère la couleur de la consigne actuelle
 export function getConsigneColor(): Cypress.Chainable<string> {
   return cy.get('[data-testid="instruction"] strong')
     .invoke('attr', 'data-testid')
@@ -12,10 +14,12 @@ export function getConsigneColor(): Cypress.Chainable<string> {
     });
 }
 
+// Clique sur un cercle de la couleur spécifiée
 export function clickCircle(color: string) {
   cy.get(`[data-testid="circle-${color}"]`, { timeout: 10000 }).click();
 }
 
+// Récupère le score actuel du jeu
 export function getScore(): Cypress.Chainable<number> {
   return cy.get('[data-testid="score"]')
     .invoke('text')
