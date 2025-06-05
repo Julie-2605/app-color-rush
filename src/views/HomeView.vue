@@ -14,19 +14,6 @@ const circles = ref<{id: number, color: string; x: number; y: number}[]>([]);
 
 const gameBoardRef = ref<HTMLElement | null>(null);
 
-// function getRandomCoordonnees() {
-//   if (!gameBoardRef.value) return { x: 0, y: 0 };
-
-//   const rect = gameBoardRef.value.getBoundingClientRect();
-//   const width  = rect.width  - 100;
-//   const height = rect.height - 100;
-
-//   const x = Math.floor(Math.random() * width);
-//   const y = Math.floor(Math.random() * height);
-
-//   return { x, y };
-// }
-
 function getRandomCoordonnees() {
   let windowWidth = window.innerWidth;
   let windowHeight = window.innerHeight;
@@ -80,6 +67,7 @@ onMounted(() => {
       <Timer v-if=" gameStore.gameStarted && !gameStore.gameOver"/>
       <ScorePanel v-if="gameStore.gameStarted && !gameStore.gameOver"/>
       <ConsigneColor />
+      
       <div class="gameboard" ref="gameboardRef">
         <Circle
             v-for="(circle, index) in circles"

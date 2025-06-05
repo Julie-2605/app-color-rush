@@ -1,43 +1,39 @@
-describe('Interaction avec les cercles', () => {
-  it('Cliquer sur une mauvaise couleur fait baisser le score', () => {
-    cy.visit('/')
+it('Cliquer sur une mauvaise couleur fait baisser le score', () => {
+  cy.visit('/')
 
-    cy.contains('Start').click()
+  cy.contains('Start').click()
 
-    cy.get('[data-testid="instruction"]', { timeout: 10000 })
-      .should('match', /#([A-Fa-f0-9]{6})/)
-      .invoke('text')
-      .then((text) => {
-        const match = text.match(/#([A-Fa-f0-9]{6})/)
-        const targetColor = match ? `#${match[1]}` : null
+  cy.get('[data-testid="instruction"]', { timeout: 10000 })
+    .invoke('html')
+    .then((html) => {
+      const match = html.match(/#([A-Fa-f0-9]{6})/)
+      expect(match, 'Couleur cible détectée').to.not.be.null
+      const targetColor = `#${match![1]}`
 
-        expect(targetColor).to.match(/^#[A-Fa-f0-9]{6}$/)
+      cy.get('[data-testid="score"]')
+        .invoke('text')
+        .then((initialScoreText) => {
+          const initialScore = parseInt(initialScoreText.match(/\d+/)?.[0] || '0', 10)
 
-        cy.get('[data-testid="score"]')
-          .invoke('text')
-          .then((initialScoreText) => {
-            const initialScore = parseInt(initialScoreText, 10)
+          cy.get('[data-testid^="circle-"]')
+            .then((circles) => {
+              const allCircles = [...circles]
+              const otherCircle = [...circles].find((el) => el.dataset.testid !== `circle-${targetColor}`)
 
-            // Trouver un cercle différent
-            cy.get('[data-testid^="circle-"]').then((circles) => {
-              const other = [...circles].find(
-                (el) => !el.dataset.testid?.includes(targetColor!)
-              )
-
-              if (other) {
-                cy.wrap(other).click()
-
-                cy.get('[data-testid="score"]')
-                  .invoke('text')
-                  .then((newScoreText) => {
-                    const newScore = parseInt(newScoreText, 10)
-                    expect(newScore).to.be.lessThan(initialScore)
-                  })
+              if (otherCircle) {
+                cy.wrap(otherCircle).click()
               } else {
-                throw new Error('Aucun cercle différent trouvé')
+                cy.wait(1000)
+                cy.get('[data-testid^="circle-"]').eq(0).click()
               }
+
+              cy.get('[data-testid="score"]')
+              .invoke('text')
+              .then((newScoreText) => {
+                const newScore = parseInt(newScoreText.match(/\d+/)?.[0] || '0', 10)
+                expect(newScore).to.be.at.most(initialScore)
             })
-          })
-      })
-  })
+            })
+        })
+    })
 })

@@ -1,5 +1,5 @@
 <template>
-    <div class="consigne">
+    <div class="consigne" data-testid="instruction">
         Cliquez sur les ronds de couleur 
         <strong :data-testid="`${currentColor}`" class="consigne-color">
             <span class="color-sample" :style="{ backgroundColor: currentColor }"></span>
