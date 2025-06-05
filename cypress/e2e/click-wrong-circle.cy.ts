@@ -2,36 +2,41 @@ describe('Interaction avec les cercles', () => {
   it('Cliquer sur une mauvaise couleur fait baisser le score', () => {
     cy.visit('/')
 
-    // Attendre que la consigne s'affiche
-    cy.get('[data-testid="instruction"]').should('contain.text', 'Clique sur')
+    cy.contains('Start').click()
 
-    // Récupérer la couleur cible
-    cy.get('[data-testid="instruction"]')
+    cy.get('[data-testid="instruction"]', { timeout: 10000 })
+      .should('match', /#([A-Fa-f0-9]{6})/)
       .invoke('text')
       .then((text) => {
-        const match = text.match(/Clique sur le cercle (\w+)/)
-        const targetColor = match ? match[1] : null
-        expect(targetColor).to.not.be.null
+        const match = text.match(/#([A-Fa-f0-9]{6})/)
+        const targetColor = match ? `#${match[1]}` : null
 
-        // Récupérer le score actuel
+        expect(targetColor).to.match(/^#[A-Fa-f0-9]{6}$/)
+
         cy.get('[data-testid="score"]')
           .invoke('text')
           .then((initialScoreText) => {
             const initialScore = parseInt(initialScoreText, 10)
 
-            // Trouver un cercle d'une couleur différente
-            cy.get(`[data-testid^="circle-"]`)
-              .not(`[data-testid="circle-${targetColor}"]`)
-              .first()
-              .click()
+            // Trouver un cercle différent
+            cy.get('[data-testid^="circle-"]').then((circles) => {
+              const other = [...circles].find(
+                (el) => !el.dataset.testid?.includes(targetColor!)
+              )
 
-            // Vérifier que le score a baissé
-            cy.get('[data-testid="score"]')
-              .invoke('text')
-              .then((newScoreText) => {
-                const newScore = parseInt(newScoreText, 10)
-                expect(newScore).to.be.lessThan(initialScore)
-              })
+              if (other) {
+                cy.wrap(other).click()
+
+                cy.get('[data-testid="score"]')
+                  .invoke('text')
+                  .then((newScoreText) => {
+                    const newScore = parseInt(newScoreText, 10)
+                    expect(newScore).to.be.lessThan(initialScore)
+                  })
+              } else {
+                throw new Error('Aucun cercle différent trouvé')
+              }
+            })
           })
       })
   })
