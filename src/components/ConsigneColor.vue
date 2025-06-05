@@ -15,7 +15,7 @@ import { useGameStore } from '@/stores/gameStore';
 
 const { currentColor } = storeToRefs(useGameStore());
 
-const colorNames : Record<string, string> = {"#5DE3F5": "Marais Tranquille", "#406DF5": "Bleu Électrique", "#3FA7F4": "Plongeon à Acapulco", "#9DF5E2": "Vert Opaline", "#A39DF5": "Lavande", "#BCDCF5": "Bleu d'Azur"};
+const colorNames : Record<string, string> = {"#5DE3F5": "Marais Tranquille", "#406DF5": "Bleu Électrique", "#3FA7F4": "Plongeon à Acapulco", "#9DF5E2": "Vert Opaline", "#A39DF5": "Lavande"};
 
 
 // const gameStore = useGameStore();

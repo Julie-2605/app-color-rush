@@ -5,28 +5,41 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useGameStore } from '@/stores/gameStore'
 
 const gameStore = useGameStore()
 
-const timer = ref(60)
-let intervalId: number | undefined
+const timer = ref(45)
+// let intervalId: number | undefined
+let intervalId: ReturnType<typeof setInterval> | null = null
+
+watch(timer, (t) => {
+  if (t === 30) {
+    gameStore.speed = 400;
+    gameStore.circleDisappear = 750;
+  }
+
+  if (t === 15) {
+    gameStore.speed = 120;
+    gameStore.circleDisappear = 1100;
+  }
+});
 
 onMounted(() => {
-  intervalId = window.setInterval(() => {
+  intervalId = setInterval(() => {
     if (timer.value > 0) {
       timer.value--
     } else {
-      clearInterval(intervalId)
-      gameStore.endGame();
+      if (intervalId !== null) clearInterval(intervalId)
+      gameStore.endGame()
     }
   }, 1000)
-})
+});
 
 onBeforeUnmount(() => {
-  clearInterval(intervalId)
-})
+  if (intervalId !== null) clearInterval(intervalId)
+});
 </script>
 
 <style scoped>
