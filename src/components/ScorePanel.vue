@@ -1,5 +1,5 @@
 <template>
-    <div class="score" data-testid="score">Votre score : {{ gameStore.score }}</div>
+    <div data-testid="score" class="score">Votre score : {{ score }}</div>
 </template>
 
 <script setup lang="ts">
