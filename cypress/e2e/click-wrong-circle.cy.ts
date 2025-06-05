@@ -1,39 +1,22 @@
-it('Cliquer sur une mauvaise couleur fait baisser le score', () => {
-  cy.visit('/')
+import { startGame, getConsigneColor, clickCircle, getScore } from '../support/helpers';
 
-  cy.contains('Start').click()
+describe('Interaction avec les cercles', () => {
 
-  cy.get('[data-testid="instruction"]', { timeout: 10000 })
-    .invoke('html')
-    .then((html) => {
-      const match = html.match(/#([A-Fa-f0-9]{6})/)
-      expect(match, 'Couleur cible détectée').to.not.be.null
-      const targetColor = `#${match![1]}`
+  it('Réduit le score si mauvaise couleur cliquée', () => {
+    startGame();
 
-      cy.get('[data-testid="score"]')
-        .invoke('text')
-        .then((initialScoreText) => {
-          const initialScore = parseInt(initialScoreText.match(/\d+/)?.[0] || '0', 10)
+    getConsigneColor().then((correctColor) => {
+      const allColors = ["#5DE3F5", "#406DF5", "#3FA7F4", "#9DF5E2", "#A39DF5", "#BCDCF5"];
+      const wrongColor = allColors.find(c => c !== correctColor)!;
 
-          cy.get('[data-testid^="circle-"]')
-            .then((circles) => {
-              const allCircles = [...circles]
-              const otherCircle = [...circles].find((el) => el.dataset.testid !== `circle-${targetColor}`)
+      clickCircle(correctColor);
 
-              if (otherCircle) {
-                cy.wrap(otherCircle).click()
-              } else {
-                cy.wait(1000)
-                cy.get('[data-testid^="circle-"]').eq(0).click()
-              }
-
-              cy.get('[data-testid="score"]')
-              .invoke('text')
-              .then((newScoreText) => {
-                const newScore = parseInt(newScoreText.match(/\d+/)?.[0] || '0', 10)
-                expect(newScore).to.be.at.most(initialScore)
-            })
-            })
-        })
-    })
-})
+      getScore().then((before) => {
+        clickCircle(wrongColor);
+        getScore().then((after) => {
+          expect(after).to.be.lessThan(before);
+        });
+      });
+    });
+  });
+});
