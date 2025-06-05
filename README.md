@@ -1,57 +1,105 @@
-# App Color Rush
 
-Cette application web est un jeu de rapidité et de réflexion.
+# 🎨 App Color Rush
 
-## Type Support for `.vue` Imports in TS
+App Color Rush est une **application web ludique** développée avec **Vue 3**, **TypeScript** et **Pinia**. Ce mini-jeu de réflexion et de rapidité propose au joueur de **cliquer sur les ronds correspondant à la bonne couleur le plus vite possible**.
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+---
 
-## Customize configuration
+## 🚀 Fonctionnalités
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+- Affichage dynamique d’une consigne avec une couleur cible
+- Apparition aléatoire de cercles colorés à cliquer
+- Score calculé selon la rapidité et la justesse
+- Interface responsive et épurée
+- Tests unitaires avec **Vitest** et end-to-end avec **Cypress**
 
-## Project Setup
+---
 
-```sh
+## 🧪 Stack technique
+
+- **Vue 3** + **Vite**  
+- **TypeScript**  
+- **Pinia** (gestion d’état)  
+- **Vitest** (tests unitaires)  
+- **Cypress** (tests E2E)  
+- **ESLint** (analyse statique)  
+
+> ℹ️ Pour une meilleure expérience avec TypeScript + `.vue`, l’extension **Volar** est recommandée dans l’éditeur.
+
+---
+
+## ⚙️ Installation
+
+```bash
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+---
 
-```sh
+## 🧑‍💻 Développement
+
+```bash
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+---
 
-```sh
+## 🏗️ Build production + vérification de types
+
+```bash
 npm run build
+npx vue-tsc --noEmit
 ```
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
+---
 
-```sh
+## ✅ Tests
+
+### Unitaires (Vitest)
+
+```bash
 npm run test:unit
 ```
 
-### Run End-to-End Tests with [Cypress](https://www.cypress.io/)
+### End-to-end (Cypress)
 
-```sh
+Développement rapide :
+
+```bash
 npm run test:e2e:dev
 ```
 
-This runs the end-to-end tests against the Vite development server.
-It is much faster than the production build.
+Mode production (recommandé pour CI) :
 
-But it's still recommended to test the production build with `test:e2e` before deploying (e.g. in CI environments):
-
-```sh
+```bash
 npm run build
 npm run test:e2e
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+---
 
-```sh
+## 🔍 Lint
+
+```bash
 npm run lint
 ```
+
+---
+
+## 📁 Structure du projet
+
+```
+src/
+├── components/       # Composants Vue (Circle, ConsigneColor, etc.)
+├── stores/           # Store Pinia (useGameStore)
+├── views/            # Page principale
+├── assets/           # Fichiers statiques
+└── __tests__/        # Fichiers de tests unitaires
+```
+
+---
+
+## 👤 Auteur
+
+Projet réalisé dans un cadre pédagogique (MyDigitalSchool) pour illustrer la qualité logicielle en frontend moderne.  
+Licence libre pour usage personnel et éducatif.
