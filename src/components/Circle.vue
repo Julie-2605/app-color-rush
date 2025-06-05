@@ -3,12 +3,15 @@
     :data-testid="`circle-${color}`"
     class="circle"
     :style="{ backgroundColor: color, left: `${x}px`, top: `${y}px` }"
-    @click="clickCircle"
-    v-motion="{
-      initial: { scale: 0, opacity: 0 },
-      enter: { scale: 1, opacity: 1 },
-      leave: { scale: 0.5, opacity: 0, transition: { duration: 0.3 } }
+    :initial="{ scale: 0, opacity: 0 }"
+    :enter="{ scale: 1, opacity: 1, transition: { type: 'spring', stiffness: 300, damping: 20 } }"
+    :hovered="{ scale: 1.1 }"
+    :tapped="{
+        scale: [1, 0.8],
+        transition: { duration: 0.4, ease: 'easeInOut' }
     }"
+    :leave="{ scale: 0.5, opacity: 0, transition: { duration: 0.3 } }"
+    @click="handleClick"
   />
 </template>
 
@@ -16,30 +19,31 @@
 import { onMounted } from 'vue'
 import { useGameStore } from '@/stores/gameStore'
 
-const gameStore = useGameStore()
-
 const props = defineProps<{
-  id: number,
-  color: string,
-  x: number,
+  id: number
+  color: string
+  x: number
   y: number
 }>()
 
-const emit = defineEmits(['remove-circle'])
+const emit = defineEmits<{
+  (e: 'remove-circle', id: number): void
+}>()
 
-function clickCircle() {
+const gameStore = useGameStore()
+
+function handleClick() {
   if (props.color === gameStore.currentColor) {
     gameStore.incrementScore()
   } else {
     gameStore.decrementScore()
   }
-  emit('remove-circle', props.id)
+
+  setTimeout(() => emit('remove-circle', props.id), 110)
 }
 
 onMounted(() => {
-  setTimeout(() => {
-    emit('remove-circle', props.id)
-  }, gameStore.circleDisappear)
+  setTimeout(() => emit('remove-circle', props.id), gameStore.circleDisappear)
 })
 </script>
 
