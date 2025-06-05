@@ -61,4 +61,9 @@ describe('gameStore', () => {
       expect(validColors).toContain(color)
     }
   })
+
+  it('defineCurrentColor définit une couleur valide', () => {
+    store.defineCurrentColor()
+    expect(store.colors).toContain(store.currentColor)
+  })
 })
